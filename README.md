@@ -1,3 +1,1 @@
-# GitBar
-# JarvisSystem
 # AdventOfCode
