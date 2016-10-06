@@ -12,12 +12,12 @@ for line in content:
 
     route.append(arr[0])
     route.append(arr[2])
-    route.append(arr[4])
+    route.append(int(arr[4]))
 
     if route[0] not in locations:
         locations.append(route[0])
     if route[1] not in locations:
-        locations.append(route[0])
+        locations.append(route[1])
 
     routes.append(route)
 
@@ -35,21 +35,24 @@ for spot in locations:
     fastestNum = 99999
     fastest = []
     secondFastestNum = 99999
-    sedcondFastest = []
+    secondFastest = []
 
     for path in paths:
-        if path[2] < fastestNum:
+        if path[2] <= fastestNum and path[2] not in fastestPaths:
             fastestNum = path[2]
             fastest = path
 
     paths.remove(fastest)
+    #paths = filter(lambda a: a != fastest, paths)
 
     for path in paths:
-        if paths[2] < secondFastestNum:
+        if paths[2] <= secondFastestNum and path[2] not in fastestPaths:
             secondFastestNum = path[2]
-            sedcondFastest = path
+            secondFastest = path
 
-    fastestPaths.append(fastest)
-    fastestPaths.append(sedcondFastest)
+    if fastest not in fastestPaths:
+            fastestPaths.append(fastest)
+    if secondFastest in fastestPaths and edcondFastest != []:
+        fastestPaths.append(secondFastest)
 
 print fastestPaths
