@@ -2,11 +2,13 @@ with open("Input.txt") as f:
     content = f.readlines()
 
 routes = []
-visited = []
 locations = []
-path = 0
-connections = []
+nodes = []
+global visited
+global path
+answer = -1
 
+# Get locations and routes
 for line in content:
     line = line.replace('\n', ' ')
     route = []
@@ -20,45 +22,61 @@ for line in content:
         locations.append(route[0])
     if route[1] not in locations:
         locations.append(route[1])
+
     routes.append(route)
 
-def findConnection(spot):
-    global path
-    global visited
-    global connections
-    smallest = 999
-    smallestRoute = []
-
-    for route in routes:
-        if spot in route and route[2] < smallest:
-            visitNum = 0
-            for visit in visited:
-                if visit in route:
-                    visitNum += 1
-            if visitNum == 0:
-                connections.append(route)
-                visited.append(spot)
-                smallest = route[2]
-                path += route[2]
-                if route[0] == spot:
-                    findConnection(route[1])
-                else:
-                    findConnection(route[0])
-
-
-
-finalPath = 9999
-finalConnections = []
+# build out nodes
 for spot in locations:
 
-    visited = [];
+    node = {'name': spot, 'locs' : []}
+
+
+    for route in routes:
+
+        if spot in route:
+            if route[0] == spot:
+                rname = route[1]
+            else:
+                rname = route[0]
+            node.get('locs').append({'name': rname, 'dist':route[2]})
+    nodes.append(node);
+
+
+# Function for recursivly searching through nodes
+def findFarthest(node):
+
+    smallest = 0
+    name = ""
+    global path
+    global visited
+
+    for loc in node.get('locs'):
+
+        if loc.get('name') not in visited:
+            if loc.get('dist') > smallest:
+                smallest = loc.get('dist')
+                name = loc.get('name')
+
+    if name != "":
+        visited.append(name)
+        path += smallest
+        for n in nodes:
+            if n.get('name') == name:
+                findFarthest(n)
+
+
+# Loop through our nodes
+for node in nodes:
+
+    visited = [node.get('name')];
     path = 0;
-    connections = []
-    findConnection(spot)
+    findFarthest(node)
 
-    if path < finalPath:
-        finalPath = path
-        finalConnections = connections
+    if answer == -1:
+        answer = path
+    else:
+        if path > answer:
+            answer = path
 
-print finalPath
-print finalConnections
+
+print answer
