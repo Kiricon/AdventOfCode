@@ -2,9 +2,13 @@ with open("Input.txt") as f:
     content = f.readlines()
 
 routes = []
-visited = []
 locations = []
+nodes = []
+global visited
+global path
+answer = -1
 
+# Get locations and routes
 for line in content:
     line = line.replace('\n', ' ')
     route = []
@@ -21,38 +25,58 @@ for line in content:
 
     routes.append(route)
 
-loop = True
-fastestPaths = [];
-#find shortest two paths
+# build out nodes
 for spot in locations:
 
-    paths = []
+    node = {'name': spot, 'locs' : []}
+
 
     for route in routes:
+
         if spot in route:
-            paths.append(route)
+            if route[0] == spot:
+                rname = route[1]
+            else:
+                rname = route[0]
+            node.get('locs').append({'name': rname, 'dist':route[2]})
+    nodes.append(node);
 
-    fastestNum = 99999
-    fastest = []
-    secondFastestNum = 99999
-    secondFastest = []
 
-    for path in paths:
-        if path[2] <= fastestNum and path[2] not in fastestPaths:
-            fastestNum = path[2]
-            fastest = path
+# Function for recursivly searching through nodes
+def findNearest(node):
 
-    paths.remove(fastest)
-    #paths = filter(lambda a: a != fastest, paths)
+    smallest = 999
+    name = ""
+    global path
+    global visited
 
-    for path in paths:
-        if paths[2] <= secondFastestNum and path[2] not in fastestPaths:
-            secondFastestNum = path[2]
-            secondFastest = path
+    for loc in node.get('locs'):
 
-    if fastest not in fastestPaths:
-            fastestPaths.append(fastest)
-    if secondFastest in fastestPaths and edcondFastest != []:
-        fastestPaths.append(secondFastest)
+        if loc.get('name') not in visited:
+            if loc.get('dist') < smallest:
+                smallest = loc.get('dist')
+                name = loc.get('name')
 
-print fastestPaths
+    if name != "":
+        visited.append(name)
+        path += smallest
+        for n in nodes:
+            if n.get('name') == name:
+                findNearest(n)
+
+
+# Loop through our nodes
+for node in nodes:
+
+    visited = [node.get('name')];
+    path = 0;
+    findNearest(node)
+
+    if answer == -1:
+        answer = path
+    else:
+        if path < answer:
+            answer = path
+
+
+print answer
