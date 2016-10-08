@@ -1,6 +1,7 @@
 with open('Input.txt', 'r') as myfile:
     content=myfile.read().replace('\n', '')
 
+answer = ''
 # boolean returning function to tell us if it's valid or not
 def isValid(string):
 
@@ -36,5 +37,33 @@ def isValid(string):
     else:
         return False
 
+def characterLoop(i, string):
 
-print isValid(content)
+    spot = string[i]
+    original = string[i]
+
+    a = 97
+    z = 122
+
+    for c in range(ord(original), z+1):
+        temp = list(string)
+        temp[i] = chr(c)
+        string = "".join(temp)
+        print string
+        if isValid(string):
+            answer = string
+            break;
+
+
+    for c in range(a, ord(original)):
+        temp = list(string)
+        temp[i] = chr(c)
+        string = "".join(temp)
+        print string
+        if isValid(string):
+            answer = string
+            break
+
+
+characterLoop(0,"m")
+newPass = content[::-1]
