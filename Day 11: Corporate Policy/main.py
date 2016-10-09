@@ -1,10 +1,13 @@
+import itertools as it
+
 with open('Input.txt', 'r') as myfile:
     content=myfile.read().replace('\n', '')
 
-answer = ''
-# boolean returning function to tell us if it's valid or not
+
+###### boolean returning function to tell us if it's valid or not
 def isValid(string):
 
+    string = string[::-1]
     #find it is has illegal characters in it
     if 'i' in string or 'o' in string or 'l' in string:
         return False
@@ -30,6 +33,7 @@ def isValid(string):
 
         if c == last and i != doubleIndex+1:
             doubles += 1
+            doubleIndex = i
         last = c
 
     if strait == 3 and doubles == 2:
@@ -37,33 +41,28 @@ def isValid(string):
     else:
         return False
 
-def characterLoop(i, string):
+
+##### recursively reverse iterate through the string
+def loop(i, string):
 
     spot = string[i]
     original = string[i]
 
     a = 97
     z = 122
-
-    for c in range(ord(original), z+1):
+    for c in it.chain(range(ord(original), z+1), range(a, ord(original))):
         temp = list(string)
         temp[i] = chr(c)
         string = "".join(temp)
-        print string
+        if i-1 >= 0 and loop(i-1, string):
+         return True
         if isValid(string):
-            answer = string
-            break;
+            answer = string[::-1]
+            print answer
+            return True
+
+    return False
 
 
-    for c in range(a, ord(original)):
-        temp = list(string)
-        temp[i] = chr(c)
-        string = "".join(temp)
-        print string
-        if isValid(string):
-            answer = string
-            break
-
-
-characterLoop(0,"m")
 newPass = content[::-1]
+loop( len(newPass)-1, newPass)
