@@ -4,9 +4,7 @@ with open("Input.txt") as f:
 
 nodes = []
 people = []
-global answer
-global pathTaken
-global answerHistory
+
 pathTaken = []
 answer = 0
 answerHistory = []
@@ -45,25 +43,25 @@ def findNode(name):
 #### Find best person to sit next to!
 def findBest(node, seated, total, totalHistory):
     for loc in node.get('locs'):
+        newTotal = total
+        newSeated = seated[:]
         global answer
         global pathTaken
         global answerHistory
-        newTotal = total
-        newSeated = seated[:]
 
         newHistory = totalHistory[:]
-        print loc
+        #print loc
         if loc.get('name') not in newSeated:
             ### Find other person's happy
             nextNode = findNode(loc.get('name'))
             other = nextNode
             otherHappy = 0
+
             for otherLoc in other.get('locs'):
                 if node.get('name') == otherLoc.get('name'):
-                    print otherLoc
                     otherHappy = otherLoc.get('units')
 
-            happy = loc.get('units') + otherLoc.get('units');
+            happy = loc.get('units') + otherHappy
 
             newHistory.append(happy)
             newTotal += happy
@@ -79,19 +77,9 @@ def findBest(node, seated, total, totalHistory):
 
 
 
-def loop(node, seated, total, totalHistory):
-    for loc in node.get('locs'):
-        global answer
-        global pathTaken
-        global answerHistory
-        newTotal = total
-        newSeated = seated[:]
-        nextNode = findNode(loc.get('name'))
-        newHistory = totalHistory[:]
-
-
 
 ## Loop through each node and try a few combos
+
 for node in nodes:
 
     seated = [node.get('name')]
@@ -99,6 +87,7 @@ for node in nodes:
     totalHistory = []
 
     findBest(node, seated[:], total, totalHistory[:])
+
 
 print answer
 print answerHistory
