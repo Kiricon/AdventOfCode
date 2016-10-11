@@ -8,6 +8,7 @@ people = []
 pathTaken = []
 answer = 0
 answerHistory = []
+final = ""
 ##### Create list of people
 for line in content:
     line = line.replace('\n', '')
@@ -48,10 +49,11 @@ def findBest(node, seated, total, totalHistory):
         global answer
         global pathTaken
         global answerHistory
+        global final
 
         newHistory = totalHistory[:]
         #print loc
-        if loc.get('name') not in newSeated:
+        if loc.get('name') not in seated:
             ### Find other person's happy
             nextNode = findNode(loc.get('name'))
             other = nextNode
@@ -65,13 +67,26 @@ def findBest(node, seated, total, totalHistory):
 
             newHistory.append(happy)
             newTotal += happy
-            newSeated.append(nextNode.get('name'))
 
+            newSeated.append(nextNode.get('name'))
             if len(newSeated) == len(people):
+
+                finalNode = findNode(newSeated[0])
+                finalHappy = 0
+                for x in nextNode.get('locs'):
+                    if finalNode.get('name') == x.get('name'):
+                        finalHappy += x.get('units')
+                for y in finalNode.get('locs'):
+                    if nextNode.get('name') == y.get('name'):
+                        finalHappy += y.get('units')
+
+                newTotal += finalHappy
                 if newTotal > answer:
+
                     answer = newTotal
-                    pathTaken = seated
+                    pathTaken = newSeated
                     answerHistory = newHistory
+
             else:
                 findBest(nextNode, newSeated, newTotal, newHistory)
 
@@ -85,10 +100,7 @@ for node in nodes:
     seated = [node.get('name')]
     total = 0
     totalHistory = []
-
     findBest(node, seated[:], total, totalHistory[:])
 
 
 print answer
-print answerHistory
-print pathTaken
