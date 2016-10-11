@@ -50,13 +50,21 @@ for i in range(seconds):
         if deer.restCounter > 0:
             deer.restCounter -= 1
 
+    farthest = 0
+    for deer in deers:
+        if deer.totalDistance > farthest:
+            farthest = deer.totalDistance
+
+    for deer in deers:
+        if deer.totalDistance == farthest:
+            deer.points +=1
 
 winner = 0;
 for deer in deers:
     print "----------"
-    print deer.name +" : "+ str(deer.totalDistance)
-    if deer.totalDistance > winner:
-        winner = deer.totalDistance
+    print deer.name +" : "+ str(deer.points)
+    if deer.points > winner:
+        winner = deer.points
 
 print "#####################"
 print "WINNER : "+ str(winner)
