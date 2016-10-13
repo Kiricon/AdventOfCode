@@ -27,12 +27,61 @@ for line in content:
 ####### Setup is complete, time for real code
 
 room = 100
-used = []
+realUsed = {}
+answer = 0
+
 for ing in Ingredients:
-    used.append({'name': ing.name, 'total': room/len(Ingredients)})
+    realUsed[ing.name] = 0
 
-switch = 0;
-lastTotal = 0;
-while switch < len(Ingredients):
 
-    newUsed = used[:]
+def findTotal(Ingredients, used):
+    total = 0
+    capTotal = 0
+    durTotal = 0
+    flavTotal = 0
+    textTotal = 0
+
+    for ing in Ingredients:
+
+        usedNo = used[ing.name]
+        capTotal += ing.capacity * usedNo
+        durTotal += ing.durability * usedNo
+        flavTotal += ing.flavor * usedNo
+        textTotal += ing.texture * usedNo
+
+    capTotal = capTotal if capTotal > 0 else 0
+    durTotal = durTotal if durTotal > 0 else 0
+    flavTotal = capTotal if capTotal > 0 else 0
+    textTotal = textTotal if textTotal > 0 else 0
+
+    return capTotal * durTotal * flavTotal * textTotal
+
+def loop(total, used):
+    global answer
+    global room
+    if total < room:
+        for ing in Ingredients:
+
+            newTotal = total
+            newUsed = used.copy()
+
+            newUsed[ing.name] += 1
+            newTotal +=1
+
+            if findTotal(Ingredients, newUsed) > 0 or newTotal < 4:
+                loop(newTotal, newUsed)
+
+    else:
+
+        total = findTotal(Ingredients, used)
+
+        if total > answer:
+            answer = total
+            print "----------"
+            print answer
+            print used
+
+
+loop(0, realUsed)
+
+print answer
