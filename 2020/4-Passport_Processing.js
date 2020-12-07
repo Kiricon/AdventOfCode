@@ -18,7 +18,6 @@ const eyeSet = new Set(['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']);
 function isValid({byr, iyr, eyr, hgt, hcl, ecl, pid, cid}) {
     if (!(byr && iyr && eyr && hgt && hcl && ecl && pid)) return false;
     
-
     byr = parseInt(byr);
     iyr = parseInt(iyr);
     eyr = parseInt(eyr);
@@ -26,8 +25,6 @@ function isValid({byr, iyr, eyr, hgt, hcl, ecl, pid, cid}) {
     if (byr < 1920 || byr > 2002) return false;
     if (iyr < 2010 || iyr > 2020) return false;
     if (eyr < 2020 || eyr > 2030) return false;
-
-    
 
     const hgtCM = hgt.split('cm');
     const hgtIN = hgt.split('in');
